@@ -8,6 +8,7 @@ import java.io.StringWriter;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import java.util.StringTokenizer;
 
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
@@ -35,6 +36,7 @@ public class FileUploadController implements Serializable {
 
 	private String uploadedFile;
 	private List<FileEntry> entries = new ArrayList<FileEntry>();
+	private String language;
 
 	public String getUploadedFile() {
 		return uploadedFile;
@@ -54,6 +56,15 @@ public class FileUploadController implements Serializable {
 	}
 
 
+	public String getLanguage() {
+		return language;
+	}
+
+	public void setLanguage(String language) {
+		this.language = language;
+	}
+
+
 	/**
 	 * 
 	 */
@@ -64,9 +75,12 @@ public class FileUploadController implements Serializable {
 		//FacesMessage msg = new FacesMessage("Succesful", event.getFile()
 		//		.getFileName() + " is uploaded.");
 		//FacesContext.getCurrentInstance().addMessage(null, msg);
+		StringTokenizer st = new StringTokenizer(event.getFile().getFileName(),".");
+		st.nextToken();
+		this.language = "File Language = "+st.nextToken();
+		
 		InputStream is = event.getFile().getInputstream();
 		parseFile(is);
-		System.out.println("test");
 		
 		/* show file in the screen
 		StringWriter writer = new StringWriter();
@@ -77,6 +91,7 @@ public class FileUploadController implements Serializable {
 		*/
 	}
 
+	@SuppressWarnings("unchecked")
 	private void parseFile(InputStream is) {
 		// First create a new XMLInputFactory
 		XMLInputFactory inputFactory = XMLInputFactory.newInstance();
@@ -96,8 +111,7 @@ public class FileUploadController implements Serializable {
 
 						entry = new FileEntry();
 
-						Iterator<Attribute> attributes = startElement
-								.getAttributes();
+						Iterator<Attribute> attributes = startElement.getAttributes();
 						while (attributes.hasNext()) {
 							Attribute attribute = attributes.next();
 							if (attribute.getName().toString().equals("name")) {
