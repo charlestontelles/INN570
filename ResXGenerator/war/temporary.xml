@@ -1,0 +1,60 @@
+<?xml version="1.0" ?> <!DOCTYPE tmx SYSTEM "tmx11.dtd">
+<tmx version="1.1">
+	<header creationtool="MyMemory - mymemory.translated.net"
+		creationtoolversion="Beta" segtype="sentence" o-tmf="TW4Win 2.0 Format"
+		adminlang="EN-US" srclang="EN-US" datatype="rtf" creationdate="20120925T094144Z"
+		creationid="Translated">
+	</header>
+	<body>
+		<tu tuid="0" creationdate="20120925T094144Z" creationid="TRANSLATED"
+			usagecount="39" lastusagedate="20120925T094144Z">
+			<tuv lang="EN-US" creationdate="20120925T094144Z" creationid="TRANSLATED">
+				<seg>Save</seg>
+			</tuv>
+			<tuv lang="PT-BR" creationdate="20120925T094144Z" creationid="TRANSLATED"
+				changedate="20120925T094144Z" changeid="TRANSLATED">
+				<seg>Guardar</seg>
+			</tuv>
+		</tu>
+		<tu tuid="1" creationdate="20120925T094144Z" creationid="MatteoT"
+			usagecount="7" lastusagedate="20120925T094144Z">
+			<tuv lang="EN-US" creationdate="20120925T094144Z" creationid="MatteoT">
+				<seg>Save</seg>
+			</tuv>
+			<tuv lang="PT-BR" creationdate="20120925T094144Z" creationid="MatteoT"
+				changedate="20120925T094144Z" changeid="MatteoT">
+				<seg>Salvar</seg>
+			</tuv>
+		</tu>
+		<tu tuid="2" creationdate="20120925T094144Z" creationid="marco"
+			usagecount="1" lastusagedate="20120925T094144Z">
+			<tuv lang="EN-US" creationdate="20120925T094144Z" creationid="marco">
+				<seg>save</seg>
+			</tuv>
+			<tuv lang="PT-BR" creationdate="20120925T094144Z" creationid="marco"
+				changedate="20090701T092646Z" changeid="marco">
+				<seg>poupar</seg>
+			</tuv>
+		</tu>
+		<tu tuid="3" creationdate="20120925T094144Z" creationid="TRANSLATED"
+			usagecount="3" lastusagedate="20120925T094144Z">
+			<tuv lang="EN-US" creationdate="20120925T094144Z" creationid="TRANSLATED">
+				<seg>SAVING</seg>
+			</tuv>
+			<tuv lang="PT-BR" creationdate="20120925T094144Z" creationid="TRANSLATED"
+				changedate="20120925T094144Z" changeid="TRANSLATED">
+				<seg>POUPANÇA</seg>
+			</tuv>
+		</tu>
+		<tu tuid="4" creationdate="20120925T094144Z" creationid="Wikipedia"
+			usagecount="1" lastusagedate="20120925T094144Z">
+			<tuv lang="EN-US" creationdate="20120925T094144Z" creationid="Wikipedia">
+				<seg>Savings</seg>
+			</tuv>
+			<tuv lang="PT-BR" creationdate="20120925T094144Z" creationid="Wikipedia"
+				changedate="20090826T045000Z" changeid="Wikipedia">
+				<seg>Poupança</seg>
+			</tuv>
+		</tu>
+	</body>
+</tmx>

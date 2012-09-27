@@ -1,0 +1,65 @@
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui">
+ 
+<h:head>
+	<title>Translate</title>
+</h:head>
+<h:body bgcolor="white">
+	<h:form>  
+	  	 
+	    <p:panel header=" ">  
+	        <h:panelGrid columns="2" cellpadding="5"> 
+		        <h:outputText value="Target Language:" />  
+		        <p:selectOneMenu value="#{fileUploadController.targetLanguage}" effect="fade"  editable="true">  
+		            <f:selectItems value="#{fileUploadController.languages}" />  
+		        </p:selectOneMenu> 
+	        		    
+			    <p:commandButton value="Translate" action="#{fileUploadController.handleTranslate}" update="dataTable"/>  
+			  	<h:outputText value="#{fileUploadController.targetLanguage}" id="display" /> 
+		  	</h:panelGrid>  
+		    
+		    <p:dataTable id="dataTable" var="entry" value="#{fileUploadController.entries}"  
+                paginator="true" rows="10"  
+                paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"  
+                rowsPerPageTemplate="5,10,15">  
+		        <f:facet name="header">  
+		            <h:outputText value="#{fileUploadController.targetLanguage}" />   
+		        </f:facet>  
+		  
+		        <p:column>  
+		            <f:facet name="header">  
+		                <h:outputText value="String ID" />  
+		            </f:facet>  
+		            <h:outputText value="#{entry.id}" />  
+		        </p:column>  
+		  
+		        <p:column>  
+		            <f:facet name="header">  
+		                <h:outputText value="String value" />  
+		            </f:facet>  
+		            <h:outputText value="#{entry.value}" />  
+		        </p:column>  
+		        
+		        <p:column>  
+		            <f:facet name="header">  
+		                <h:outputText value="String Translation" />  
+		            </f:facet>  
+		            <p:selectOneMenu value="#{entry.tmxEntries[0].target}" effect="fade"  editable="true" var="e" style="width:300px">  
+		               <f:selectItems value="#{entry.tmxEntries}" var="tmxItem" itemLabel="#{tmxItem.target}{tmxItem.usageCount}" itemValue="#{tmxItem}" />  
+		               <p:column>#{e.target}</p:column> 
+		               <p:column>#{e.usageCount}</p:column> 
+		               <p:column>#{e.creationID}</p:column> 
+		            </p:selectOneMenu> 
+		        </p:column>  
+
+		    </p:dataTable>
+	    </p:panel>  
+	    
+
+	    
+	</h:form>  
+</h:body>
+</html>

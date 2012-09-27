@@ -5,9 +5,7 @@
 	xmlns:p="http://primefaces.org/ui">
 	
 	<h:head>
-	<link href="/css/greenhat_style.css" rel="stylesheet" type="text/css"/>
-	<link href="/css/default.css" rel="stylesheet" type="text/css"/>
-	
+
 	</h:head>	
 	<h:body>
 		<h:form enctype="multipart/form-data">  
@@ -27,7 +25,9 @@
                 paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"  
                 rowsPerPageTemplate="5,10,15">  
 		        <f:facet name="header">  
-		            <h:outputText value="#{fileUploadController.language}" />   
+		        	<p:selectOneMenu value="#{fileUploadController.sourceLanguage}" effect="fade"  editable="true">  
+		            	<f:selectItems value="#{fileUploadController.languages}" />  
+		        	</p:selectOneMenu>  
 		        </f:facet>  
 		  
 		        <p:column>  
