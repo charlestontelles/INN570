@@ -39,9 +39,15 @@
 		<servlet-class>javax.faces.webapp.FacesServlet</servlet-class>
 		<load-on-startup>1</load-on-startup>
 	</servlet>
- 
-
- 
+ 	<servlet>
+		<servlet-name>OutputServlet</servlet-name>
+		<servlet-class>au.edu.qut.inn570.resxgen.servlet.OutputServlet</servlet-class>
+		<load-on-startup>1</load-on-startup>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>OutputServlet</servlet-name>
+		<url-pattern>/target.resx</url-pattern>
+	</servlet-mapping>
  
 	<!-- Map these files with JSF -->
 	<servlet-mapping>

@@ -14,10 +14,15 @@ import javax.faces.bean.ViewScoped;
 import javax.servlet.jsp.tagext.TryCatchFinally;
 import javax.xml.stream.XMLEventReader;
 import javax.xml.stream.XMLInputFactory;
+import javax.xml.stream.XMLStreamReader;
 import javax.xml.stream.events.Attribute;
 import javax.xml.stream.events.EndElement;
 import javax.xml.stream.events.StartElement;
 import javax.xml.stream.events.XMLEvent;
+
+import org.apache.commons.io.input.XmlStreamReader;
+
+import au.edu.qut.inn570.resxgen.controller.FileUploadController;
 @ViewScoped
 @ManagedBean
 @SessionScoped
@@ -86,10 +91,14 @@ public class FileEntry implements Serializable {
 	public void loadTmxEntries(String tmxResponse) {
 		try {
 			tmxEntries = new ArrayList<TmxEntry>();
+			tmxResponse = tmxResponse.replace("<!DOCTYPE tmx SYSTEM \"tmx11.dtd\">", "");
+			//FileUploadController.uploadedFile += "\n\n FILEEEEEEEE" + new String(response);
 			InputStream is = new ByteArrayInputStream(tmxResponse.getBytes(Charset.forName("UTF-8")));
+			//FileUploadController.uploadedFile += "\n\ncreated input stream:" + is.available();
 			XMLInputFactory inputFactory = XMLInputFactory.newInstance();
 			XMLEventReader eventReader = inputFactory.createXMLEventReader(is,
 					"UTF-8");
+			FileUploadController.uploadedFile += "\n\nread xml";
 			TmxEntry tmxEntry = null;
 			StartElement startElement;
 			while (eventReader.hasNext()) {
@@ -175,9 +184,10 @@ public class FileEntry implements Serializable {
 			tmxEntry.setCreationID("");
 			tmxEntry.setLastUsageDate("");
 			tmxEntry.setSource("");
-			tmxEntry.setTarget("<< User Input >>");
+			tmxEntry.setTarget("<< User Input2 >>");
 			tmxEntries.add(tmxEntry);
 		} catch (Exception e) {
+			FileUploadController.uploadedFile += "\n\n" + e;
 			System.out.println("error: " + e);
 			// TODO: handle exception
 			// add default value
@@ -186,7 +196,7 @@ public class FileEntry implements Serializable {
 			tmxEntry.setCreationID("");
 			tmxEntry.setLastUsageDate("");
 			tmxEntry.setSource("");
-			tmxEntry.setTarget("<< User Input >>");
+			tmxEntry.setTarget("<< User InputE >>");
 			tmxEntries.add(tmxEntry);
 		}
 	}

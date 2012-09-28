@@ -2,6 +2,7 @@ package au.edu.qut.inn570.resxgen.controller;
 
 import java.io.IOException;
 
+import java.io.File;
 import java.io.InputStream;
 import java.io.Serializable;
 import java.nio.charset.Charset;
@@ -15,6 +16,10 @@ import java.util.StringTokenizer;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
 import javax.faces.bean.ViewScoped;
+import javax.faces.context.FacesContext;
+import javax.faces.webapp.FacesServlet;
+import javax.servlet.ServletContext;
+import javax.servlet.http.HttpServletResponse;
 import javax.ws.rs.core.MultivaluedMap;
 import javax.xml.stream.XMLEventReader;
 import javax.xml.stream.XMLInputFactory;
@@ -27,7 +32,6 @@ import javax.xml.stream.events.XMLEvent;
 import org.primefaces.event.FileUploadEvent;
 
 import com.sun.jersey.api.client.Client;
-import com.sun.jersey.api.client.ClientResponse;
 import com.sun.jersey.api.client.WebResource;
 import com.sun.jersey.core.util.MultivaluedMapImpl;
 
@@ -40,7 +44,7 @@ public class FileUploadController implements Serializable {
 
 
 	
-	private String uploadedFile;
+	public static String uploadedFile;
 	private List<FileEntry> entries = new ArrayList<FileEntry>();
 	private String sourceLanguage;
 	
@@ -50,7 +54,7 @@ public class FileUploadController implements Serializable {
 
 	public FileUploadController(){
 
-		
+		uploadedFile = "";
 		languages = new HashMap<String, String>();  
 		languages.put("en-US", "en-US");  
 		languages.put("de-DE", "de-DE");  
@@ -203,6 +207,7 @@ public class FileUploadController implements Serializable {
 			   
 			   queryParams.add("of", "tmx");
 			   String s = webResource.queryParams(queryParams).get(String.class);
+			   uploadedFile += s;
 			   entry.setSourceLanguage(this.sourceLanguage);
 			   entry.setTargetLanguage(this.targetLanguage);
 			   entry.loadTmxEntries(s);
@@ -221,4 +226,5 @@ public class FileUploadController implements Serializable {
 			System.out.println("eero: "  +e);
 		}
 	}
+	
 }
