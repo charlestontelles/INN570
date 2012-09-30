@@ -36,6 +36,7 @@ public class FileEntry implements Serializable {
 	private String sourceLanguage = "";
 	private String targetLanguage = "";
 	private List<TmxEntry> tmxEntries;
+	private String selectedEntry;
 
 	private String translatedValue;
 	private int tuID;
@@ -88,6 +89,14 @@ public class FileEntry implements Serializable {
 		this.tmxEntries = tmxEntries;
 	}
 
+	public String getSelectedEntry() {
+		return selectedEntry;
+	}
+
+	public void setSelectedEntry(String selectedEntry) {
+		this.selectedEntry = selectedEntry;
+	}
+
 	public void loadTmxEntries(String tmxResponse) {
 		try {
 			tmxEntries = new ArrayList<TmxEntry>();
@@ -98,7 +107,7 @@ public class FileEntry implements Serializable {
 			XMLInputFactory inputFactory = XMLInputFactory.newInstance();
 			XMLEventReader eventReader = inputFactory.createXMLEventReader(is,
 					"UTF-8");
-			FileUploadController.uploadedFile += "\n\nread xml";
+			
 			TmxEntry tmxEntry = null;
 			StartElement startElement;
 			while (eventReader.hasNext()) {
@@ -186,8 +195,8 @@ public class FileEntry implements Serializable {
 			tmxEntry.setSource("");
 			tmxEntry.setTarget("<< User Input2 >>");
 			tmxEntries.add(tmxEntry);
+			//selectedEntry = tmxEntries.get(0).getTarget();
 		} catch (Exception e) {
-			FileUploadController.uploadedFile += "\n\n" + e;
 			System.out.println("error: " + e);
 			// TODO: handle exception
 			// add default value
@@ -198,6 +207,7 @@ public class FileEntry implements Serializable {
 			tmxEntry.setSource("");
 			tmxEntry.setTarget("<< User InputE >>");
 			tmxEntries.add(tmxEntry);
+			//selectedEntry = tmxEntries.get(0).getTarget();
 		}
 	}
 

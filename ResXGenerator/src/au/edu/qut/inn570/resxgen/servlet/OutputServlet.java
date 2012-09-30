@@ -14,10 +14,12 @@ public class OutputServlet extends HttpServlet {
 	public void doGet(HttpServletRequest req, HttpServletResponse resp)
 			throws IOException {
 		resp.setContentType("application/resx");
+		resp.setCharacterEncoding("UTF-8");
+		resp.setHeader("Content-Disposition","attachment;filename=target."+FileUploadController.staticTargetLanguage+".resx");
 	
 		PrintWriter out = resp.getWriter();
 		// Assuming your json object is **jsonObject**, perform the following, it will return your json object  
-		out.print("<data>"+FileUploadController.uploadedFile+"</data>");
+		out.print(FileUploadController.uploadedFile);
 		out.flush();
 	}
 }

@@ -9,7 +9,7 @@
 	</h:head>	
 	<h:body>
 		<h:form enctype="multipart/form-data">  
-		  
+		  	<p:growl id="growl" showDetail="true" sticky="true" />  
 		    <p:fileUpload fileUploadListener="#{fileUploadController.handleFileUpload}"  
 		            mode="advanced"   
 		            update="dataTable"  
@@ -23,6 +23,7 @@
                 paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"  
                 rowsPerPageTemplate="5,10,15">  
 		        <f:facet name="header">  
+		        	<h:outputText value="Source Language  " /> 
 		        	<p:selectOneMenu value="#{fileUploadController.sourceLanguage}" effect="fade"  editable="true">  
 		            	<f:selectItems value="#{fileUploadController.languages}" />  
 		        	</p:selectOneMenu>  

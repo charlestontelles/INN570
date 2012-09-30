@@ -2,10 +2,9 @@ package au.edu.qut.inn570.resxgen.controller;
 
 import java.io.IOException;
 
-import java.io.File;
 import java.io.InputStream;
 import java.io.Serializable;
-import java.nio.charset.Charset;
+import java.io.StringWriter;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -13,13 +12,11 @@ import java.util.List;
 import java.util.Map;
 import java.util.StringTokenizer;
 
+import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
 import javax.faces.bean.ViewScoped;
 import javax.faces.context.FacesContext;
-import javax.faces.webapp.FacesServlet;
-import javax.servlet.ServletContext;
-import javax.servlet.http.HttpServletResponse;
 import javax.ws.rs.core.MultivaluedMap;
 import javax.xml.stream.XMLEventReader;
 import javax.xml.stream.XMLInputFactory;
@@ -29,6 +26,7 @@ import javax.xml.stream.events.EndElement;
 import javax.xml.stream.events.StartElement;
 import javax.xml.stream.events.XMLEvent;
 
+import org.apache.commons.io.IOUtils;
 import org.primefaces.event.FileUploadEvent;
 
 import com.sun.jersey.api.client.Client;
@@ -42,27 +40,27 @@ import au.edu.qut.inn570.resxgen.bean.FileEntry;
 @SessionScoped
 public class FileUploadController implements Serializable {
 
-
-	
 	public static String uploadedFile;
+	public static String staticTargetLanguage;
 	private List<FileEntry> entries = new ArrayList<FileEntry>();
 	private String sourceLanguage;
-	
-	private Map<String,String> languages; 
+
+	private Map<String, String> languages;
 	private String targetLanguage;
 
+	private int tabIndex = 0;
 
-	public FileUploadController(){
+	public FileUploadController() {
 
 		uploadedFile = "";
-		languages = new HashMap<String, String>();  
-		languages.put("en-US", "en-US");  
-		languages.put("de-DE", "de-DE");  
-		languages.put("pt-BR", "pt-BR");  
-		languages.put("fr-FR", "fr-FR"); 
-		languages.put("zh-CN", "zh-CN"); 
+		languages = new HashMap<String, String>();
+		languages.put("en-US", "en-US");
+		languages.put("de-DE", "de-DE");
+		languages.put("pt-BR", "pt-BR");
+		languages.put("fr-FR", "fr-FR");
+		languages.put("zh-CN", "zh-CN");
 	}
-	
+	/*
 	public String getUploadedFile() {
 		return uploadedFile;
 	}
@@ -70,8 +68,8 @@ public class FileUploadController implements Serializable {
 	public void setUploadedFile(String uploadedFile) {
 		this.uploadedFile = uploadedFile;
 	}
+	*/
 
-	
 	public List<FileEntry> getEntries() {
 		return entries;
 	}
@@ -80,8 +78,13 @@ public class FileUploadController implements Serializable {
 		this.entries = entries;
 	}
 
+	public int getTabIndex() {
+		return tabIndex;
+	}
 
-
+	public void setTabIndex(int tabIndex) {
+		this.tabIndex = tabIndex;
+	}
 
 	public String getSourceLanguage() {
 		return sourceLanguage;
@@ -107,9 +110,6 @@ public class FileUploadController implements Serializable {
 		this.targetLanguage = targetLanguage;
 	}
 
-
-
-
 	/**
 	 * 
 	 */
@@ -117,23 +117,25 @@ public class FileUploadController implements Serializable {
 
 	public void handleFileUpload(FileUploadEvent event) throws IOException,
 			XMLStreamException {
-		//FacesMessage msg = new FacesMessage("Succesful", event.getFile()
-		//		.getFileName() + " is uploaded.");
-		//FacesContext.getCurrentInstance().addMessage(null, msg);
-		StringTokenizer st = new StringTokenizer(event.getFile().getFileName(),".");
+		// FacesMessage msg = new FacesMessage("Succesful", event.getFile()
+		// .getFileName() + " is uploaded.");
+		// FacesContext.getCurrentInstance().addMessage(null, msg);
+		StringTokenizer st = new StringTokenizer(event.getFile().getFileName(),
+				".");
 		st.nextToken();
 		this.sourceLanguage = st.nextToken();
-		
+
 		InputStream is = event.getFile().getInputstream();
+		// loadedFile = event.getFile().getInputstream();
 		parseFile(is);
-		
-		/* show file in the screen
+
+		// show file in the screen
 		StringWriter writer = new StringWriter();
+		is.reset();
 		IOUtils.copy(is, writer, "UTF-8");
 		String theString = writer.toString();
 		this.uploadedFile = theString;
-		System.out.println("file: " + theString);
-		*/
+		// System.out.println("file: " + theString);
 	}
 
 	@SuppressWarnings("unchecked")
@@ -142,8 +144,8 @@ public class FileUploadController implements Serializable {
 		XMLInputFactory inputFactory = XMLInputFactory.newInstance();
 		// Setup a new eventReader
 		try {
-			XMLEventReader eventReader = inputFactory.createXMLEventReader(is, "UTF-8");
-
+			XMLEventReader eventReader = inputFactory.createXMLEventReader(is,
+					"UTF-8");
 			FileEntry entry = null;
 
 			while (eventReader.hasNext()) {
@@ -156,7 +158,8 @@ public class FileUploadController implements Serializable {
 
 						entry = new FileEntry();
 
-						Iterator<Attribute> attributes = startElement.getAttributes();
+						Iterator<Attribute> attributes = startElement
+								.getAttributes();
 						while (attributes.hasNext()) {
 							Attribute attribute = attributes.next();
 							if (attribute.getName().toString().equals("name")) {
@@ -177,54 +180,76 @@ public class FileUploadController implements Serializable {
 						}
 					}
 				}
-				
-		        // If we reach the end of an item element we add it to the list
-		        if (event.isEndElement()) {
-		          EndElement endElement = event.asEndElement();
-		          if (endElement.getName().getLocalPart() == ("data")) {
+
+				// If we reach the end of an item element we add it to the list
+				if (event.isEndElement()) {
+					EndElement endElement = event.asEndElement();
+					if (endElement.getName().getLocalPart() == ("data")) {
 						if (entry.getId().contains(".Text")) {
 							entries.add(entry);
 						}
-		          }
-		        }
+					}
+				}
 			}
 		} catch (Exception e) {
 			System.out.println("error: " + e);
 		}
 	}
-	
-	public void handleTranslate(){
-		System.out.println("testing...");
-		
-		Client client = new Client();
-		WebResource webResource = client.resource("http://mymemory.translated.net/api/get");
-		
-		
-		for(FileEntry entry : entries){
-			   MultivaluedMap queryParams = new MultivaluedMapImpl();
-			   queryParams.add("q", entry.getValue());
-			   queryParams.add("langpair", this.sourceLanguage+"|"+this.targetLanguage);
-			   
-			   queryParams.add("of", "tmx");
-			   String s = webResource.queryParams(queryParams).get(String.class);
-			   uploadedFile += s;
-			   entry.setSourceLanguage(this.sourceLanguage);
-			   entry.setTargetLanguage(this.targetLanguage);
-			   entry.loadTmxEntries(s);
-		}
-		
+
+	public void handleTranslate() {
 		try {
+			Client client = new Client();
+			WebResource webResource = client
+					.resource("http://mymemory.translated.net/api/get");
 
+			for (FileEntry entry : entries) {
+				MultivaluedMap queryParams = new MultivaluedMapImpl();
+				queryParams.add("q", entry.getValue());
+				queryParams.add("langpair", this.sourceLanguage + "|"
+						+ this.targetLanguage);
 
-			
-			//System.out.println(s);
-			
-			//this.targetLanguage = s;
-		
-			//System.out.println("done");
+				queryParams.add("of", "tmx");
+				String s = webResource.queryParams(queryParams).get(
+						String.class);
+				entry.setSourceLanguage(this.sourceLanguage);
+				entry.setTargetLanguage(this.targetLanguage);
+				entry.loadTmxEntries(s);
+			}
+
+			FacesContext context = FacesContext.getCurrentInstance();
+
+			context.addMessage(null, new FacesMessage("Successful",
+					"Memory Translation Completed"));
 		} catch (Exception e) {
-			System.out.println("eero: "  +e);
+			FacesContext context = FacesContext.getCurrentInstance();
+
+			context.addMessage(null, new FacesMessage("Error", "" + e));
+
 		}
 	}
-	
+
+	public void handleExport() {
+		try {
+			//new ByteArrayInputStream(tmxResponse.getBytes(Charset.forName("UTF-8")));
+			//System.out.println("\n\n");
+			for (FileEntry entry : entries) {
+				//System.out.println(entry.getValue() + " - "	+ entry.getTmxEntries().get(0).getTarget());
+				this.uploadedFile = this.uploadedFile.replace("<value>"+entry.getValue()+"</value>",	"<value>"+entry.getTmxEntries().get(0).getTarget()+"</value>");
+			}
+
+			this.tabIndex = 2;
+			this.staticTargetLanguage = this.targetLanguage;
+			
+			FacesContext context = FacesContext.getCurrentInstance();
+
+			context.addMessage(null, new FacesMessage("Successful",
+					"File Exported"));
+		} catch (Exception e) {
+			System.out.println("error: " + e);
+			FacesContext context = FacesContext.getCurrentInstance();
+
+			context.addMessage(null, new FacesMessage("Error", "" + e));
+		}
+	}
+
 }
