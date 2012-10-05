@@ -8,19 +8,20 @@
 	<title>Translate</title>
 </h:head>
 <h:body bgcolor="white">
-	<h:form>
+	<h:form id="pageForm">
 		<p:growl id="growl" showDetail="true" sticky="true" />  
-		<p:panel header=" ">
-			<h:panelGrid columns="2" cellpadding="5">
+		<p:panel header=" " id="panel">
+			<h:panelGrid columns="2" cellpadding="5" id="panelGrid">
 				<h:outputText value="Target Language:" />
 				<p:selectOneMenu value="#{fileUploadController.targetLanguage}"
 					effect="fade" editable="true">
 					<f:selectItems value="#{fileUploadController.languages}" />
 				</p:selectOneMenu>
 
-				<p:commandButton value="Translate" action="#{fileUploadController.handleTranslate}" update="dataTable,growl" />
+				<p:commandButton id="cmdTranslate" value="Translate" action="#{fileUploadController.handleTranslate}" update="dataTable,growl" />
 				<p:commandButton value="Export"	action="#{fileUploadController.handleExport}" update="dataTable,growl" />
 				<h:outputText value="#{fileUploadController.targetLanguage}" id="display" />
+				  
 			</h:panelGrid>
 
 			<p:dataTable id="dataTable" var="entry"
@@ -61,7 +62,10 @@
 
 			</p:dataTable>
 		</p:panel>
-
+		
+		<p:blockUI block="panel" trigger="cmdTranslate">  
+       	 <p:graphicImage value="/images/loader.gif"/>  
+    	</p:blockUI>
 
 
 	</h:form>

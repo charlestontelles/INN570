@@ -17,7 +17,7 @@
  
 	<!-- Welcome page -->
 	<welcome-file-list>
-		<welcome-file>faces/tabinput.xhtml</welcome-file>
+		<welcome-file>faces/welcome.xhtml</welcome-file>
 	</welcome-file-list>
  
     <filter>

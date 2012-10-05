@@ -193,7 +193,7 @@ public class FileEntry implements Serializable {
 			tmxEntry.setCreationID("");
 			tmxEntry.setLastUsageDate("");
 			tmxEntry.setSource("");
-			tmxEntry.setTarget("<< User Input2 >>");
+			tmxEntry.setTarget("NO MATCH");
 			tmxEntries.add(tmxEntry);
 			//selectedEntry = tmxEntries.get(0).getTarget();
 		} catch (Exception e) {
@@ -205,7 +205,7 @@ public class FileEntry implements Serializable {
 			tmxEntry.setCreationID("");
 			tmxEntry.setLastUsageDate("");
 			tmxEntry.setSource("");
-			tmxEntry.setTarget("<< User InputE >>");
+			tmxEntry.setTarget("NO_MATCH");
 			tmxEntries.add(tmxEntry);
 			//selectedEntry = tmxEntries.get(0).getTarget();
 		}

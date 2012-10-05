@@ -41,6 +41,7 @@ import au.edu.qut.inn570.resxgen.bean.FileEntry;
 public class FileUploadController implements Serializable {
 
 	public static String uploadedFile;
+	public String originalUploadedFile;
 	public static String staticTargetLanguage;
 	private List<FileEntry> entries = new ArrayList<FileEntry>();
 	private String sourceLanguage;
@@ -49,9 +50,11 @@ public class FileUploadController implements Serializable {
 	private String targetLanguage;
 
 	private int tabIndex = 0;
+	
+	private Integer progress; 
 
 	public FileUploadController() {
-
+		progress = 0;
 		uploadedFile = "";
 		languages = new HashMap<String, String>();
 		languages.put("en-US", "en-US");
@@ -59,6 +62,11 @@ public class FileUploadController implements Serializable {
 		languages.put("pt-BR", "pt-BR");
 		languages.put("fr-FR", "fr-FR");
 		languages.put("zh-CN", "zh-CN");
+		languages.put("es-ES", "es-ES");
+		languages.put("ko-KR", "ko-KR");
+		languages.put("ja-JA", "ja-JA");
+		languages.put("nl-NL", "nl-NL");
+		languages.put("tr-TR", "tr-TR");
 	}
 	/*
 	public String getUploadedFile() {
@@ -72,6 +80,16 @@ public class FileUploadController implements Serializable {
 
 	public List<FileEntry> getEntries() {
 		return entries;
+	}
+
+
+
+	public Integer getProgress() {
+		return progress;
+	}
+
+	public void setProgress(Integer progress) {
+		this.progress = progress;
 	}
 
 	public void setEntries(List<FileEntry> entries) {
@@ -135,6 +153,7 @@ public class FileUploadController implements Serializable {
 		IOUtils.copy(is, writer, "UTF-8");
 		String theString = writer.toString();
 		this.uploadedFile = theString;
+		this.originalUploadedFile = theString;
 		// System.out.println("file: " + theString);
 	}
 
@@ -201,6 +220,9 @@ public class FileUploadController implements Serializable {
 			Client client = new Client();
 			WebResource webResource = client
 					.resource("http://mymemory.translated.net/api/get");
+			
+			client.setConnectTimeout(30000);
+			client.setReadTimeout(30000);
 
 			for (FileEntry entry : entries) {
 				MultivaluedMap queryParams = new MultivaluedMapImpl();
@@ -214,6 +236,8 @@ public class FileUploadController implements Serializable {
 				entry.setSourceLanguage(this.sourceLanguage);
 				entry.setTargetLanguage(this.targetLanguage);
 				entry.loadTmxEntries(s);
+				
+
 			}
 
 			FacesContext context = FacesContext.getCurrentInstance();
@@ -232,8 +256,10 @@ public class FileUploadController implements Serializable {
 		try {
 			//new ByteArrayInputStream(tmxResponse.getBytes(Charset.forName("UTF-8")));
 			//System.out.println("\n\n");
+			this.uploadedFile = this.originalUploadedFile;
+			
 			for (FileEntry entry : entries) {
-				//System.out.println(entry.getValue() + " - "	+ entry.getTmxEntries().get(0).getTarget());
+				System.out.println(entry.getValue() + " - "	+ entry.getTmxEntries().get(0).getTarget());
 				this.uploadedFile = this.uploadedFile.replace("<value>"+entry.getValue()+"</value>",	"<value>"+entry.getTmxEntries().get(0).getTarget()+"</value>");
 			}
 
