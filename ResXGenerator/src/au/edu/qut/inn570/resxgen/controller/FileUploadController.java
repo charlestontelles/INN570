@@ -17,6 +17,7 @@ import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
 import javax.faces.bean.ViewScoped;
 import javax.faces.context.FacesContext;
+import javax.faces.event.ValueChangeEvent;
 import javax.ws.rs.core.MultivaluedMap;
 import javax.xml.stream.XMLEventReader;
 import javax.xml.stream.XMLInputFactory;
@@ -34,6 +35,7 @@ import com.sun.jersey.api.client.WebResource;
 import com.sun.jersey.core.util.MultivaluedMapImpl;
 
 import au.edu.qut.inn570.resxgen.bean.FileEntry;
+import au.edu.qut.inn570.resxgen.bean.TmxFile;
 
 @ViewScoped
 @ManagedBean
@@ -41,6 +43,7 @@ import au.edu.qut.inn570.resxgen.bean.FileEntry;
 public class FileUploadController implements Serializable {
 
 	public static String uploadedFile;
+	public static String tmxFile;
 	public String originalUploadedFile;
 	public static String staticTargetLanguage;
 	private List<FileEntry> entries = new ArrayList<FileEntry>();
@@ -132,6 +135,11 @@ public class FileUploadController implements Serializable {
 	 * 
 	 */
 	private static final long serialVersionUID = -2970866286751151250L;
+	
+	public void handleSourceLanguage(ValueChangeEvent event){
+		//System.out.println("event= " + event.getNewValue());
+		this.sourceLanguage = ""+event.getNewValue();
+	}
 
 	public void handleFileUpload(FileUploadEvent event) throws IOException,
 			XMLStreamException {
@@ -204,9 +212,22 @@ public class FileUploadController implements Serializable {
 				if (event.isEndElement()) {
 					EndElement endElement = event.asEndElement();
 					if (endElement.getName().getLocalPart() == ("data")) {
-						if (entry.getId().contains(".Text")) {
+						//if (entry.getId().contains(".Text")) {
+						if (!entry.getId().contains(">>") &&
+							!entry.getValue().contains("System.Windows") &&
+							!entry.getValue().contains("1") &&
+							!entry.getValue().contains("2") &&
+							!entry.getValue().contains("3") &&
+							!entry.getValue().contains("4") &&
+							!entry.getValue().contains("5") &&
+							!entry.getValue().contains("5") &&
+							!entry.getValue().contains("7") &&
+							!entry.getValue().contains("8") &&
+							!entry.getValue().contains("9") &&
+							!entry.getValue().contains("0")
+							)
 							entries.add(entry);
-						}
+						//}
 					}
 				}
 			}
@@ -251,18 +272,29 @@ public class FileUploadController implements Serializable {
 
 		}
 	}
+	
+	public void handleUpdate(){
+		FacesContext context = FacesContext.getCurrentInstance();
+
+		context.addMessage(null, new FacesMessage("Successful",
+				"To be implemented (MyMemory calls)"));
+	}
 
 	public void handleExport() {
 		try {
 			//new ByteArrayInputStream(tmxResponse.getBytes(Charset.forName("UTF-8")));
 			//System.out.println("\n\n");
 			this.uploadedFile = this.originalUploadedFile;
+			TmxFile exportFile = new TmxFile(this.sourceLanguage, this.targetLanguage);
 			
 			for (FileEntry entry : entries) {
 				System.out.println(entry.getValue() + " - "	+ entry.getTmxEntries().get(0).getTarget());
 				this.uploadedFile = this.uploadedFile.replace("<value>"+entry.getValue()+"</value>",	"<value>"+entry.getTmxEntries().get(0).getTarget()+"</value>");
+				exportFile.addElement(entry.getValue(), entry.getTmxEntries().get(0).getTarget());
 			}
 
+			exportFile.endFile();
+			this.tmxFile = exportFile.getBf().toString();
 			this.tabIndex = 2;
 			this.staticTargetLanguage = this.targetLanguage;
 			

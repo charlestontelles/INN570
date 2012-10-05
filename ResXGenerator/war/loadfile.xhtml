@@ -24,8 +24,9 @@
                 rowsPerPageTemplate="5,10,15">  
 		        <f:facet name="header">  
 		        	<h:outputText value="Source Language  " /> 
-		        	<p:selectOneMenu value="#{fileUploadController.sourceLanguage}" effect="fade"  editable="true">  
+		        	<p:selectOneMenu value="#{fileUploadController.sourceLanguage}" effect="fade"  editable="true" valueChangeListener="#{fileUploadController.handleSourceLanguage}">  
 		            	<f:selectItems value="#{fileUploadController.languages}" />  
+		            	<p:ajax update="@this"/>		            	
 		        	</p:selectOneMenu>  
 		        </f:facet>  
 		  

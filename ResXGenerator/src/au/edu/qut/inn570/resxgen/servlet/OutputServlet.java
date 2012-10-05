@@ -13,14 +13,26 @@ public class OutputServlet extends HttpServlet {
 	
 	public void doGet(HttpServletRequest req, HttpServletResponse resp)
 			throws IOException {
-		resp.setContentType("application/resx");
-		resp.setCharacterEncoding("UTF-8");
-		resp.setHeader("Content-Disposition","attachment;filename=target."+FileUploadController.staticTargetLanguage+".resx");
-	
-		PrintWriter out = resp.getWriter();
-		// Assuming your json object is **jsonObject**, perform the following, it will return your json object  
-		out.print(FileUploadController.uploadedFile);
-		out.flush();
+		
+		if (req.getParameter("format").equalsIgnoreCase("tmx")){
+			resp.setContentType("application/tmx");
+			resp.setCharacterEncoding("UTF-8");
+			resp.setHeader("Content-Disposition","attachment;filename=tmx."+FileUploadController.staticTargetLanguage+".xml");
+		
+			PrintWriter out = resp.getWriter();
+			// Assuming your json object is **jsonObject**, perform the following, it will return your json object  
+			out.print(FileUploadController.tmxFile);
+			out.flush();
+		} else {
+			resp.setContentType("application/resx");
+			resp.setCharacterEncoding("UTF-8");
+			resp.setHeader("Content-Disposition","attachment;filename=target."+FileUploadController.staticTargetLanguage+".resx");
+		
+			PrintWriter out = resp.getWriter();
+			// Assuming your json object is **jsonObject**, perform the following, it will return your json object  
+			out.print(FileUploadController.uploadedFile);
+			out.flush();
+		}
 	}
 }
 
