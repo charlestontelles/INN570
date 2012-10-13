@@ -28,6 +28,7 @@ import javax.xml.stream.events.StartElement;
 import javax.xml.stream.events.XMLEvent;
 
 import org.apache.commons.io.IOUtils;
+import org.primefaces.component.selectonemenu.SelectOneMenu;
 import org.primefaces.event.FileUploadEvent;
 
 import com.sun.jersey.api.client.Client;
@@ -55,10 +56,15 @@ public class FileUploadController implements Serializable {
 	private int tabIndex = 0;
 	
 	private Integer progress; 
+	
+	private String myMemoryUserName = "";
+	private String myMemoryKey = "";
 
 	public FileUploadController() {
 		progress = 0;
 		uploadedFile = "";
+		myMemoryUserName = "charlestontelles";
+		myMemoryKey = "1tP9yey56yAoU";
 		languages = new HashMap<String, String>();
 		languages.put("en-US", "en-US");
 		languages.put("de-DE", "de-DE");
@@ -81,8 +87,34 @@ public class FileUploadController implements Serializable {
 	}
 	*/
 
+	
+	
 	public List<FileEntry> getEntries() {
 		return entries;
+	}
+
+
+
+	public String getMyMemoryUserName() {
+		return myMemoryUserName;
+	}
+
+
+
+	public void setMyMemoryUserName(String myMemoryUserName) {
+		this.myMemoryUserName = myMemoryUserName;
+	}
+
+
+
+	public String getMyMemoryKey() {
+		return myMemoryKey;
+	}
+
+
+
+	public void setMyMemoryKey(String myMemoryKey) {
+		this.myMemoryKey = myMemoryKey;
 	}
 
 
@@ -250,8 +282,15 @@ public class FileUploadController implements Serializable {
 				queryParams.add("q", entry.getValue());
 				queryParams.add("langpair", this.sourceLanguage + "|"
 						+ this.targetLanguage);
-
 				queryParams.add("of", "tmx");
+				
+				if (!this.myMemoryUserName.equalsIgnoreCase("none") && 
+						!this.myMemoryKey.equalsIgnoreCase("none")){
+					queryParams.add("user",this.myMemoryUserName);
+					queryParams.add("key",this.myMemoryKey);
+				}
+				
+				
 				String s = webResource.queryParams(queryParams).get(
 						String.class);
 				entry.setSourceLanguage(this.sourceLanguage);
@@ -265,6 +304,9 @@ public class FileUploadController implements Serializable {
 
 			context.addMessage(null, new FacesMessage("Successful",
 					"Memory Translation Completed"));
+			
+			webResource.delete();
+			client.destroy();
 		} catch (Exception e) {
 			FacesContext context = FacesContext.getCurrentInstance();
 
@@ -274,10 +316,49 @@ public class FileUploadController implements Serializable {
 	}
 	
 	public void handleUpdate(){
-		FacesContext context = FacesContext.getCurrentInstance();
+		try {
+			Client client = new Client();
+			WebResource webResource = client
+					.resource("http://mymemory.translated.net/api/set");
+			
+			client.setConnectTimeout(30000);
+			client.setReadTimeout(30000);
 
-		context.addMessage(null, new FacesMessage("Successful",
-				"To be implemented (MyMemory calls)"));
+			for (FileEntry entry : entries) {
+				MultivaluedMap queryParams = new MultivaluedMapImpl();
+				queryParams.add("seg", entry.getValue());
+				queryParams.add("tra", entry.getTmxEntries().get(0).getTarget());
+				queryParams.add("langpair", this.sourceLanguage + "|"
+						+ this.targetLanguage);
+				
+				if (!this.myMemoryUserName.equalsIgnoreCase("none") && 
+						!this.myMemoryKey.equalsIgnoreCase("none")){
+					queryParams.add("user",this.myMemoryUserName);
+					queryParams.add("key",this.myMemoryKey);
+				}
+				
+				
+				String s = webResource.queryParams(queryParams).get(
+						String.class);
+
+			}
+			
+			FacesContext context = FacesContext.getCurrentInstance();
+
+			context.addMessage(null, new FacesMessage("Sucessful",
+					"Translation Memory Updated"));
+			
+			webResource.delete();
+			client.destroy();
+			
+		} catch (Exception e) {
+			FacesContext context = FacesContext.getCurrentInstance();
+
+			context.addMessage(null, new FacesMessage("Error",
+					""+e));
+		}
+		
+
 	}
 
 	public void handleExport() {
@@ -307,6 +388,15 @@ public class FileUploadController implements Serializable {
 			FacesContext context = FacesContext.getCurrentInstance();
 
 			context.addMessage(null, new FacesMessage("Error", "" + e));
+		}
+	}
+	
+	public void handleUserNameSelection(ValueChangeEvent event){
+		System.out.println("triggered");
+		if(((SelectOneMenu)event.getSource()).getClientId().contains("username")){
+			this.myMemoryUserName = ""+event.getNewValue();
+		} else {
+			this.myMemoryKey = ""+event.getNewValue();
 		}
 	}
 

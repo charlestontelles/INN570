@@ -11,17 +11,17 @@
 	<h:form id="pageForm">
 		<p:growl id="growl" showDetail="true" sticky="true" />  
 		<p:panel header=" " id="panel">
-			<h:panelGrid columns="2" cellpadding="5" id="panelGrid">
+			<h:panelGrid columns="3" cellpadding="5" id="panelGrid">
 				<h:outputText value="Target Language:" />
 				<p:selectOneMenu value="#{fileUploadController.targetLanguage}"
-					effect="fade" editable="true">
+					effect="fade" style="width:200px" editable="true">
 					<f:selectItems value="#{fileUploadController.languages}" />
 				</p:selectOneMenu>
+				<h:outputText value=" " />
 
 				<p:commandButton id="cmdTranslate" value="Translate" action="#{fileUploadController.handleTranslate}" update="dataTable,growl" />
 				<p:commandButton value="Export"	action="#{fileUploadController.handleExport}" update="dataTable,growl" />
-				<h:outputText value="#{fileUploadController.targetLanguage}" id="display" />
-				  
+				<p:commandButton id="cmdSave" value="Save" action="#{fileUploadController.handleUpdate}" update="growl" />
 			</h:panelGrid>
 
 			<p:dataTable id="dataTable" var="entry"
@@ -63,7 +63,7 @@
 			</p:dataTable>
 		</p:panel>
 		
-		<p:blockUI block="panel" trigger="cmdTranslate">  
+		<p:blockUI block="panel" trigger="cmdTranslate,cmdSave">  
        	 <p:graphicImage value="/images/loader.gif"/>  
     	</p:blockUI>
 

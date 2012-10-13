@@ -8,6 +8,28 @@
 	<title>Help</title>
 </h:head>
 <h:body bgcolor="white">
+	<h:form id="helpForm">
+		<p:panel id="pagePanel" header="Translation Memory Settings">  
+	        <h:panelGrid id="pageGrid" columns="2">  
+	            <h:outputText value="My Memory User Name: " />  
+				<p:selectOneMenu id="username" value="#{fileUploadController.myMemoryUserName}"
+					effect="fade" style="width:200px" editable="true" valueChangeListener="#{fileUploadController.handleUserNameSelection}">
+					<f:selectItem itemLabel="charlestontelles" itemValue="charlestontelles" />
+					<f:selectItem itemLabel="none" itemValue="none" />	
+					 <p:ajax update="username"/>				
+				</p:selectOneMenu>
+	              
+	            <h:outputText value="My Memory Key: " />  
+				<p:selectOneMenu id="key" value="#{fileUploadController.myMemoryKey}"
+					effect="fade" style="width:200px" editable="true" valueChangeListener="#{fileUploadController.handleUserNameSelection}">
+					<f:selectItem itemLabel="1tP9yey56yAoU" itemValue="1tP9yey56yAoU" />
+					<f:selectItem itemLabel="none" itemValue="none" />
+					<p:ajax update="key" />	 
+				</p:selectOneMenu> 
+
+	        </h:panelGrid>  
+    	</p:panel> 
+	</h:form>
 	<h1>Useful Links</h1>
 	<h4><a href="/res/assignment02.zip">sample files</a></h4>
 	<h4><a href="http://www.i18nguy.com/unicode/language-identifiers.html">Language identifiers</a>(http://www.i18nguy.com/unicode/language-identifiers.html)</h4>
