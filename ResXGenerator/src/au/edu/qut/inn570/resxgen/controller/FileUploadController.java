@@ -37,6 +37,7 @@ import com.sun.jersey.core.util.MultivaluedMapImpl;
 
 import au.edu.qut.inn570.resxgen.bean.FileEntry;
 import au.edu.qut.inn570.resxgen.bean.TmxFile;
+import au.edu.qut.inn570.resxgen.bing.BingTranslator;
 
 @ViewScoped
 @ManagedBean
@@ -59,6 +60,8 @@ public class FileUploadController implements Serializable {
 	
 	private String myMemoryUserName = "";
 	private String myMemoryKey = "";
+	
+	private BingTranslator bingTranslator;
 
 	public FileUploadController() {
 		progress = 0;
@@ -76,6 +79,7 @@ public class FileUploadController implements Serializable {
 		languages.put("ja-JA", "ja-JA");
 		languages.put("nl-NL", "nl-NL");
 		languages.put("tr-TR", "tr-TR");
+		bingTranslator = new BingTranslator();
 	}
 	/*
 	public String getUploadedFile() {
@@ -299,6 +303,9 @@ public class FileUploadController implements Serializable {
 				
 
 			}
+			
+			// CALL BING TRANSLATOR
+			bingTranslator.translate(entries, this.sourceLanguage, this.targetLanguage);
 
 			FacesContext context = FacesContext.getCurrentInstance();
 
