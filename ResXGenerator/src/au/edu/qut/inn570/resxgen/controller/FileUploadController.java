@@ -38,7 +38,14 @@ import com.sun.jersey.core.util.MultivaluedMapImpl;
 import au.edu.qut.inn570.resxgen.bean.FileEntry;
 import au.edu.qut.inn570.resxgen.bean.TmxFile;
 import au.edu.qut.inn570.resxgen.bing.BingTranslator;
-
+/**
+ * The Controller is the intermediate layer responsible for the communication
+ * between UI and Beans (POJOS)
+ * 
+ * 
+ * @author Charleston
+ *
+ */
 @ViewScoped
 @ManagedBean
 @SessionScoped
@@ -61,6 +68,8 @@ public class FileUploadController implements Serializable {
 	private String myMemoryUserName = "";
 	private String myMemoryKey = "";
 	
+	private String tmOption = "";
+	
 	private BingTranslator bingTranslator;
 
 	public FileUploadController() {
@@ -68,6 +77,7 @@ public class FileUploadController implements Serializable {
 		uploadedFile = "";
 		myMemoryUserName = "charlestontelles";
 		myMemoryKey = "1tP9yey56yAoU";
+		tmOption = "My Memory";
 		languages = new HashMap<String, String>();
 		languages.put("en-US", "en-US");
 		languages.put("de-DE", "de-DE");
@@ -81,18 +91,21 @@ public class FileUploadController implements Serializable {
 		languages.put("tr-TR", "tr-TR");
 		bingTranslator = new BingTranslator();
 	}
-	/*
-	public String getUploadedFile() {
-		return uploadedFile;
-	}
-
-	public void setUploadedFile(String uploadedFile) {
-		this.uploadedFile = uploadedFile;
-	}
-	*/
 
 	
 	
+	public String getTmOption() {
+		return tmOption;
+	}
+
+
+
+	public void setTmOption(String tmOption) {
+		this.tmOption = tmOption;
+	}
+
+
+
 	public List<FileEntry> getEntries() {
 		return entries;
 	}
@@ -274,46 +287,58 @@ public class FileUploadController implements Serializable {
 
 	public void handleTranslate() {
 		try {
-			Client client = new Client();
-			WebResource webResource = client
-					.resource("http://mymemory.translated.net/api/get");
-			
-			client.setConnectTimeout(30000);
-			client.setReadTimeout(30000);
-
-			for (FileEntry entry : entries) {
-				MultivaluedMap queryParams = new MultivaluedMapImpl();
-				queryParams.add("q", entry.getValue());
-				queryParams.add("langpair", this.sourceLanguage + "|"
-						+ this.targetLanguage);
-				queryParams.add("of", "tmx");
+						
+			if(tmOption.equalsIgnoreCase("My Memory") ||
+				tmOption.equalsIgnoreCase("Both")){
+				Client client = new Client();
+				WebResource webResource = client
+						.resource("http://mymemory.translated.net/api/get");
 				
-				if (!this.myMemoryUserName.equalsIgnoreCase("none") && 
-						!this.myMemoryKey.equalsIgnoreCase("none")){
-					queryParams.add("user",this.myMemoryUserName);
-					queryParams.add("key",this.myMemoryKey);
+				client.setConnectTimeout(30000);
+				client.setReadTimeout(30000);
+	
+				for (FileEntry entry : entries) {
+					MultivaluedMap queryParams = new MultivaluedMapImpl();
+					queryParams.add("q", entry.getValue());
+					queryParams.add("langpair", this.sourceLanguage + "|"
+							+ this.targetLanguage);
+					queryParams.add("of", "tmx");
+					
+					if (!this.myMemoryUserName.equalsIgnoreCase("none") && 
+							!this.myMemoryKey.equalsIgnoreCase("none")){
+						queryParams.add("user",this.myMemoryUserName);
+						queryParams.add("key",this.myMemoryKey);
+					}
+					
+					
+					String s = webResource.queryParams(queryParams).get(
+							String.class);
+					entry.setSourceLanguage(this.sourceLanguage);
+					entry.setTargetLanguage(this.targetLanguage);
+					entry.loadTmxEntries(s);
+					
+	
 				}
-				
-				
-				String s = webResource.queryParams(queryParams).get(
-						String.class);
-				entry.setSourceLanguage(this.sourceLanguage);
-				entry.setTargetLanguage(this.targetLanguage);
-				entry.loadTmxEntries(s);
-				
-
+				webResource.delete();
+				client.destroy();
+			
 			}
 			
 			// CALL BING TRANSLATOR
-			bingTranslator.translate(entries, this.sourceLanguage, this.targetLanguage);
-
+			
+			if (tmOption.equalsIgnoreCase("Microsoft Translator (Bing)")){				
+				bingTranslator.translate(entries, this.sourceLanguage, this.targetLanguage,true);
+			} else if (tmOption.equalsIgnoreCase("Both")){
+				bingTranslator.translate(entries, this.sourceLanguage, this.targetLanguage,false);
+			}
+			
+			
 			FacesContext context = FacesContext.getCurrentInstance();
 
 			context.addMessage(null, new FacesMessage("Successful",
 					"Memory Translation Completed"));
 			
-			webResource.delete();
-			client.destroy();
+
 		} catch (Exception e) {
 			FacesContext context = FacesContext.getCurrentInstance();
 
@@ -324,6 +349,18 @@ public class FileUploadController implements Serializable {
 	
 	public void handleUpdate(){
 		try {
+			if (this.myMemoryKey.equalsIgnoreCase("none") ||
+					this.myMemoryUserName.equalsIgnoreCase("none")){
+				FacesContext context = FacesContext.getCurrentInstance();
+
+				context.addMessage(null, new FacesMessage("Validation Message",
+						"Cannot Save without MyMemory key (see Config Tab)"));
+				
+				return;
+				
+			}
+				
+			
 			Client client = new Client();
 			WebResource webResource = client
 					.resource("http://mymemory.translated.net/api/set");
@@ -347,6 +384,8 @@ public class FileUploadController implements Serializable {
 				
 				String s = webResource.queryParams(queryParams).get(
 						String.class);
+				
+				System.out.println("\nupdate response: " + s);
 
 			}
 			
@@ -404,6 +443,12 @@ public class FileUploadController implements Serializable {
 			this.myMemoryUserName = ""+event.getNewValue();
 		} else {
 			this.myMemoryKey = ""+event.getNewValue();
+		}
+	}
+	
+	public void handleTmOptionSelection(ValueChangeEvent event){
+		if(((SelectOneMenu)event.getSource()).getClientId().contains("tmOption")){
+			this.tmOption = ""+event.getNewValue();
 		}
 	}
 

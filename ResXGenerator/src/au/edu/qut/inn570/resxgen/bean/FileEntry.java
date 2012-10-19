@@ -176,6 +176,7 @@ public class FileEntry implements Serializable {
 				}
 
 				// If we reach the end of an item element we add it to the list
+
 				if (event.isEndElement()) {
 					EndElement endElement = event.asEndElement();
 					if (endElement.getName().getLocalPart() == ("tu")) {

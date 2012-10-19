@@ -17,7 +17,7 @@ public class OutputServlet extends HttpServlet {
 		if (req.getParameter("format").equalsIgnoreCase("tmx")){
 			resp.setContentType("application/tmx");
 			resp.setCharacterEncoding("UTF-8");
-			resp.setHeader("Content-Disposition","attachment;filename=tmx."+FileUploadController.staticTargetLanguage+".xml");
+			resp.setHeader("Content-Disposition","attachment;filename=tmx."+FileUploadController.staticTargetLanguage+".tmx");
 		
 			PrintWriter out = resp.getWriter();
 			// Assuming your json object is **jsonObject**, perform the following, it will return your json object  

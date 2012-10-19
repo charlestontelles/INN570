@@ -1,6 +1,7 @@
 package au.edu.qut.inn570.resxgen.bing;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.StringTokenizer;
 
@@ -84,7 +85,7 @@ public class BingTranslator implements Serializable{
 	}
 
 	
-	public void translate(List<FileEntry> entries, String sourceLanguage, String targetLanguage){
+	public void translate(List<FileEntry> entries, String sourceLanguage, String targetLanguage, boolean reset){
 		try {
 		
 	        ClientConfig config = new DefaultClientConfig();
@@ -109,7 +110,7 @@ public class BingTranslator implements Serializable{
 	        	textsElement.addChildElement("string","", "http://schemas.microsoft.com/2003/10/Serialization/Arrays").addTextNode(entry.getValue());
 	        }    
 	        bodyElement.addChildElement("from").addTextNode(sourceLanguage.substring(0,2));
-	        bodyElement.addChildElement("to").addTextNode(targetLanguage.substring(0, 2));
+	        bodyElement.addChildElement("to").addTextNode(targetLanguage.equalsIgnoreCase("zh-CN")?"zh-CHS":targetLanguage.substring(0, 2));
 	        message.saveChanges();
 	        
 			
@@ -134,6 +135,11 @@ public class BingTranslator implements Serializable{
 				newTmx.setTarget(translations.item(i).getChildNodes().item(2).getTextContent());
 				newTmx.setSourceLanguage(sourceLanguage);
 				newTmx.setTargetLanguage(targetLanguage);
+				if (reset)
+					currentEntry.setTmxEntries(new ArrayList<TmxEntry>());
+				if (currentEntry.getTmxEntries()!=null && currentEntry.getTmxEntries().size()==1
+						&& (currentEntry.getTmxEntries().get(0).getTarget()==null || currentEntry.getTmxEntries().get(0).getTarget().contains("MATCH")))
+					currentEntry.getTmxEntries().remove(0);
 				currentEntry.getTmxEntries().add(newTmx);
 				System.out.println("translation value: " + translations.item(i).getChildNodes().item(2).getTextContent());
 			}

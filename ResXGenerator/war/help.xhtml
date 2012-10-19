@@ -26,8 +26,18 @@
 					<f:selectItem itemLabel="none" itemValue="none" />
 					<p:ajax update="key" />	 
 				</p:selectOneMenu> 
+				
+				<h:outputText value="TM Option: " />  
+				<p:selectOneMenu id="tmOptionField" value="#{fileUploadController.tmOption}"
+					effect="fade" style="width:300px" editable="true" valueChangeListener="#{fileUploadController.handleTmOptionSelection}">
+					<f:selectItem itemLabel="My Memory" itemValue="My Memory" />
+					<f:selectItem itemLabel="Microsoft Translator (Bing)" itemValue="Microsoft Translator(Bing)" />	
+					<f:selectItem itemLabel="Both" itemValue="Both" />
+					 <p:ajax update="tmOptionField"/>				
+				</p:selectOneMenu>
 
 	        </h:panelGrid>  
+	        
     	</p:panel> 
 	</h:form>
 	<h1>Useful Links</h1>

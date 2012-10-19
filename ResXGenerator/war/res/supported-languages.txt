@@ -1,0 +1,47 @@
+<s:Envelope xmlns:s="http://schemas.xmlsoap.org/soap/envelope/">
+   <s:Body>
+      <GetLanguagesForTranslateResponse xmlns="http://api.microsofttranslator.com/V2">
+         <GetLanguagesForTranslateResult xmlns:a="http://schemas.microsoft.com/2003/10/Serialization/Arrays" xmlns:i="http://www.w3.org/2001/XMLSchema-instance">
+            <a:string>ar</a:string>
+            <a:string>bg</a:string>
+            <a:string>ca</a:string>
+            <a:string>zh-CHS</a:string>
+            <a:string>zh-CHT</a:string>
+            <a:string>cs</a:string>
+            <a:string>da</a:string>
+            <a:string>nl</a:string>
+            <a:string>en</a:string>
+            <a:string>et</a:string>
+            <a:string>fi</a:string>
+            <a:string>fr</a:string>
+            <a:string>de</a:string>
+            <a:string>el</a:string>
+            <a:string>ht</a:string>
+            <a:string>he</a:string>
+            <a:string>hi</a:string>
+            <a:string>mww</a:string>
+            <a:string>hu</a:string>
+            <a:string>id</a:string>
+            <a:string>it</a:string>
+            <a:string>ja</a:string>
+            <a:string>ko</a:string>
+            <a:string>lv</a:string>
+            <a:string>lt</a:string>
+            <a:string>no</a:string>
+            <a:string>fa</a:string>
+            <a:string>pl</a:string>
+            <a:string>pt</a:string>
+            <a:string>ro</a:string>
+            <a:string>ru</a:string>
+            <a:string>sk</a:string>
+            <a:string>sl</a:string>
+            <a:string>es</a:string>
+            <a:string>sv</a:string>
+            <a:string>th</a:string>
+            <a:string>tr</a:string>
+            <a:string>uk</a:string>
+            <a:string>vi</a:string>
+         </GetLanguagesForTranslateResult>
+      </GetLanguagesForTranslateResponse>
+   </s:Body>
+</s:Envelope>
