@@ -15,7 +15,7 @@ public class OutputServlet extends HttpServlet {
 			throws IOException {
 		
 		if (req.getParameter("format").equalsIgnoreCase("tmx")){
-			resp.setContentType("application/tmx");
+			resp.setContentType("text/xml");
 			resp.setCharacterEncoding("UTF-8");
 			resp.setHeader("Content-Disposition","attachment;filename=tmx."+FileUploadController.staticTargetLanguage+".tmx");
 		
@@ -24,7 +24,7 @@ public class OutputServlet extends HttpServlet {
 			out.print(FileUploadController.tmxFile);
 			out.flush();
 		} else {
-			resp.setContentType("application/resx");
+			resp.setContentType("text/xml");
 			resp.setCharacterEncoding("UTF-8");
 			resp.setHeader("Content-Disposition","attachment;filename=target."+FileUploadController.staticTargetLanguage+".resx");
 		

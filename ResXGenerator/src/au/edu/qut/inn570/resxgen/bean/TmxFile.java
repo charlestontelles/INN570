@@ -12,7 +12,7 @@ public class TmxFile implements Serializable {
 	private int counter = 0;
 	private StringBuffer bf =  new StringBuffer();
 	private String header = "" +
-			"<?xml version=\"1.0\" ?>" + 
+			"<?xml version=\"1.0\" encoding=\"UTF-8\" ?>" + 
 		"\n\t<tmx version=\"1.1\">" +
 	"\n\t\t<header " +
 	"\n\t\tcreationtool=\"http://resxgen.appspot.com\" " +
