@@ -451,5 +451,40 @@ public class FileUploadController implements Serializable {
 			this.tmOption = ""+event.getNewValue();
 		}
 	}
+	
+	public void handleTranslateChange(ValueChangeEvent event){
+		System.out.println("triggered");
+		String newValue = ""+event.getNewValue();
+		//tabView:pageForm:dataTable:3:strTranslate
+		String newEvent = ((SelectOneMenu)event.getSource()).getClientId();		
+		//String itemNumber = newEvent.substring(27,newEvent.indexOf(":", 27));
+		//System.out.println("triggered: " + newValue + " " + newEvent);
+		if (newValue.contains("0")){
+			newValue = newValue.substring(0,newValue.indexOf("0"));
+		}else if (newValue.contains("1")){
+			newValue = newValue.substring(0,newValue.indexOf("1"));
+		}else if (newValue.contains("2")){
+			newValue = newValue.substring(0,newValue.indexOf("2"));
+		}if (newValue.contains("3")){
+			newValue = newValue.substring(0,newValue.indexOf("3"));
+		}else if (newValue.contains("4")){
+			newValue = newValue.substring(0,newValue.indexOf("4"));
+		}else if (newValue.contains("5")){
+			newValue = newValue.substring(0,newValue.indexOf("5"));
+		}else if (newValue.contains("6")){
+			newValue = newValue.substring(0,newValue.indexOf("6"));
+		}else if (newValue.contains("7")){
+			newValue = newValue.substring(0,newValue.indexOf("7"));
+		}else if (newValue.contains("8")){
+			newValue = newValue.substring(0,newValue.indexOf("8"));
+		}else if (newValue.contains("9")){
+			newValue = newValue.substring(0,newValue.indexOf("9"));
+		}
+		//entry.tmxEntries[0].target
+		((SelectOneMenu)event.getSource()).setValue(newValue);
+		//System.out.println("trigger");
+		
+	}
+		
 
 }

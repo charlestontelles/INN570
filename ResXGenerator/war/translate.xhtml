@@ -51,12 +51,13 @@
 					<f:facet name="header">
 						<h:outputText value="String Translation" />
 					</f:facet>
-					<p:selectOneMenu value="#{entry.tmxEntries[0].target}"
-						effect="fade" editable="true" var="e" style="width:300px">
+					<p:selectOneMenu id="strTranslate" value="#{entry.tmxEntries[0].target}"
+						effect="fade" editable="true" var="e" style="width:300px" valueChangeListener="#{fileUploadController.handleTranslateChange}">
 						<f:selectItems value="#{entry.tmxEntries}" var="tmxItem" itemLabel="#{tmxItem.target}{tmxItem.usageCount}" itemValue="#{tmxItem}" />
 						<p:column>#{e.target}</p:column>
 						<p:column>#{e.usageCount}</p:column>
 						<p:column>#{e.creationID}</p:column>
+						<p:ajax update="dataTable" />
 					</p:selectOneMenu>
 				</p:column>
 
